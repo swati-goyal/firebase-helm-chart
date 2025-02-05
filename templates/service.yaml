@@ -1,0 +1,35 @@
+{{- $fullName := include "service.fullname" . -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $fullName }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - name: {{ .Values.firestore.name }}
+    port: {{ .Values.firestore.port }}
+    protocol: TCP
+    targetPort: http
+  - name: {{ .Values.fireauth.name }}
+    port: {{ .Values.fireauth.port }}
+    protocol: TCP
+    targetPort: http
+  selector:
+    {{- include "service.selectorLabels" . | nindent 4 }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $fullName }}-nodeport
+spec:
+  type: {{ .Values.firebaseui.type }}
+  ports:
+  - name: {{ .Values.firebaseui.name }}
+    port: {{ .Values.firebaseui.port }}
+    protocol: TCP
+    targetPort: http
+  selector:
+    {{- include "service.selectorLabels" . | nindent 4 }}

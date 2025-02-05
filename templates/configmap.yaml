@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: firebase
+data:
+  {{- range $key, $value := .Values.app.config }}
+  {{ $key | upper }}: "{{ $value }}"
+  {{- end }}
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: firebase-json
+data:
+  firebase.json: |-
+{{ .Files.Get "firebase.json" | indent 4 }}
